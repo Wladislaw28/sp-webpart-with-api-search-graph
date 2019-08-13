@@ -54,9 +54,13 @@ export default class WebPartFootbalEvents extends React.Component<IWebPartFootba
     }).then((response) => response.json())
         .then((data) => data.PrimaryQueryResult.RelevantResults.Table.Rows)
           .then((resp) => {
-            const data = resp;
-            console.log(data);
+            this.filterArrayEvents(resp);
           });
+  }
+
+  private filterArrayEvents(data: Array<any>) : void {
+    const arrayE = data.filter((item) => item.Cells[3].Value !== 'Dev1 - FootbalList');
+    console.log(arrayE);
   }
 
   private _getUserData(): void {
@@ -73,18 +77,38 @@ export default class WebPartFootbalEvents extends React.Component<IWebPartFootba
     });
 }
 
-  private async addEventListCalendar(e: any, dateEvent: string, strEvent: string, strLeague: string, userName: string ) : Promise<any> {
+  private async addEventListCalendar(e: any, dateEvent: string, strEvent: string, strLeague: string, userName: string, strDate:string, strTime: string ) : Promise<any> {
         e.preventDefault();
+
+        // const dateStartEventStart = dateEvent+'T10:00:00.0000000Z';
+        // const dateStartEventEnd = dateEvent+'T19:00:00.0000000Z';
+
+        
+        // const re = /\s*\s*/;
+        // let str1 = strDate.split(re);
+        // [str1[0], str1[3]]  = [str1[3], str1[0]];
+        // [str1[1], str1[4]] = [str1[4], str1[1]];
+        // const dateStartEvent = str1.join('');
+
         const Web1 = (await import(/*webpackChunkName: '@pnp_sp' */ "@pnp/sp")).Web;
         let web = new Web1(this.props.context.pageContext.web.absoluteUrl + '/sites/Dev1');
         web.lists.getById('80fed460-d7c5-499e-920b-32db6689236e').items.add({
             Title: strEvent,
-            // DisplayName: {userName},
-            EventsRollUpStartDate: dateEvent,
-            DiscussionCategory: strLeague
-        }).then((iar) => {
-          console.log(iar);
-      });
+            NameUser: userName,
+            //EventsRollUpStartDate: dateStartEventStart,
+            //EventsRollUpEndDate: dateStartEventEnd,
+            CategoryFootball: strLeague
+        });
+
+
+      //   web.lists.getById('80fed460-d7c5-499e-920b-32db6689236e').update({
+      //     Title: "My New Title"
+      //   }).then(i => {
+      //     console.log(i);
+      // });
+
+      
+        this._getItemsList();
   }
   
   public render(): React.ReactElement<IWebPartFootbalEventsProps> {
@@ -101,11 +125,12 @@ export default class WebPartFootbalEvents extends React.Component<IWebPartFootba
                           <h1>{item.strEvent}</h1>
                           <h2>{item.dateEvent}</h2>
                           <div>
-                            <p>Home team:{item.strHomeTeam}</p>
-                            <p>Away team:{item.strAwayTeam}</p>
+                            <p>Home team: {item.strHomeTeam}</p>
+                            <p>Away team: {item.strAwayTeam}</p>
                           </div>
                           <button className={styles.button} 
-                          onClick={(e) => this.addEventListCalendar(e,item.dateEvent, item.strEvent, item.strLeague, this.state.userName )}>Sign Up</button>
+                          onClick={(e) => this.addEventListCalendar(e,item.dateEvent, 
+                          item.strEvent, item.strLeague, this.state.userName, item.strDate, item.strTime )}>Sign Up</button>
                       </div>
                     );
                   })}
