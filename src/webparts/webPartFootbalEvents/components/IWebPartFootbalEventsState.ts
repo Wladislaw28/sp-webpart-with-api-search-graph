@@ -10,6 +10,8 @@ export interface Events {
     
     strEvent: string;
     strLeague: string;
+
+    strSport: string;
   }
   
   export interface IWebPartFootbalEventsState {

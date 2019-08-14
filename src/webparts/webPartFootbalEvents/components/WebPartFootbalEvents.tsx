@@ -2,7 +2,7 @@ import * as React from 'react';
 import { MSGraphClient } from '@microsoft/sp-http';
 import * as MicrosoftGraph from '@microsoft/microsoft-graph-types';
 import { IWebPartFootbalEventsProps } from './IWebPartFootbalEventsProps';
-import {IWebPartFootbalEventsState} from './IWebPartFootbalEventsState';
+import {IWebPartFootbalEventsState, Events} from './IWebPartFootbalEventsState';
 import FootbalEventsList from './FootbalEventsList/FootbalEventsList';
 import ItemsListCalendar from './ItemsListCalendar/ItemsListCalendar';
 
@@ -23,12 +23,33 @@ export default class WebPartFootbalEvents extends React.Component<IWebPartFootba
     this._getUserData();
   }
 
+  public componentWillMount(): void {
+    if (localStorage.getItem("arrayEventsApi") === null) {
+        this._getArrayEventsWithApi();
+    } else {
+         this.getLocalStorage();
+    }
+  }
+
+  public getLocalStorage() : void {
+    const json: string | null  = localStorage.getItem("arrayEventsApi");
+    const arrayEventsApi = JSON.parse(json);
+    this.setState({
+      arrayFootbalEventsApi: arrayEventsApi
+    })
+  }
+
+  public setLocalStorage( eventsApi:Events[] ) : void {
+    const arrayEventsApi = JSON.stringify(this.state.arrayFootbalEventsApi);
+    localStorage.setItem("arrayEventsApi", arrayEventsApi);
+  }
+
   private _getArrayEventsWithApi() : void {
     fetch(`https://api.allorigins.win/raw?url=${encodeURIComponent('https://www.thesportsdb.com/api/v1/json/1/eventsnextleague.php?id=4328')}`)
       .then((response) => response.json())
       .then( (dataRespo) => this.setState({
         arrayFootbalEventsApi: dataRespo.events 
-      }));
+      }, () => this.setLocalStorage(this.state.arrayFootbalEventsApi)));
   }
 
   private _getItemsList() : void {
@@ -48,10 +69,9 @@ export default class WebPartFootbalEvents extends React.Component<IWebPartFootba
 
 
   private _mapArrayItems(arrayData: Array<any>): void {
-    const arrayE = arrayData.filter((item) => item.Cells[3].Value !== 'Dev1 - FootbalList');
-    console.log(arrayE);
+    const filterArrayEvents = arrayData.filter((item) => item.Cells[3].Value !== 'Dev1 - FootbalList');
     const dataMap: Array<any> = [];
-    arrayE.forEach((item) => {
+    filterArrayEvents.forEach((item) => {
         dataMap.push({
             Title: item.Cells[3].Value,
             StartDate: item.Cells[2].Value
