@@ -91,9 +91,9 @@ export default class FootbalEventsList extends React.Component<IFootbalEventsLis
           <div>
             <div>
               {this.state.counter > 0 ? 
-               <button className={styles.button} onClick={() => this._sliceEvents('-')}>Back</button> : null}
+               <button onClick={() => this._sliceEvents('-')}>Back</button> : null}
               {this.state.counter === 12 ? 
-              null : <button className={styles.button} onClick={() => this._sliceEvents('+')}>Next</button>}
+              null : <button onClick={() => this._sliceEvents('+')}>Next</button>}
             </div>
               <div>
                 {this.state.compactEvents.map((item) => {
@@ -108,8 +108,7 @@ export default class FootbalEventsList extends React.Component<IFootbalEventsLis
                                 <p>Home team: {item.strHomeTeam}</p>
                                 <p>Away team: {item.strAwayTeam}</p>
                             </div>
-                        <button className={styles.button} 
-                        onClick={(e) => {
+                        <button onClick={(e) => {
 
                             this.addEventListCalendar(e,item.dateEvent, 
                             item.strEvent, item.strLeague, item.strSport, this.props.userName, item.strTime);

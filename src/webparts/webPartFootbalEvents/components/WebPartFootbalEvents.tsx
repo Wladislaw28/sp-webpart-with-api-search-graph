@@ -102,9 +102,8 @@ export default class WebPartFootbalEvents extends React.Component<IWebPartFootba
     return (
       <div className={ styles.webPartFootbalEvents }>
         <div className={ styles.container }>
-          <div className={ styles.row }>
-            <div className={ styles.column }>
-              <span className={ styles.title }>English Premier League</span>
+        
+              <h1>English Premier League</h1>
 
               {arrayFootbalEventsApi.length >= 1 ? <FootbalEventsList userName={userName} 
               arrayEvents={arrayFootbalEventsApi} context={this.props.context} /> : null}
@@ -112,8 +111,6 @@ export default class WebPartFootbalEvents extends React.Component<IWebPartFootba
               {arrayItemsList.length >= 1 ? <ItemsListCalendar arrayItemsList={arrayItemsList} /> : null}
             </div>
           </div>
-        </div>
-      </div>
     );
   }
 }
