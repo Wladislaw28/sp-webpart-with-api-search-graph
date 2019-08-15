@@ -2,11 +2,43 @@ import * as React from 'react';
 import { MSGraphClient } from '@microsoft/sp-http';
 import * as MicrosoftGraph from '@microsoft/microsoft-graph-types';
 import {IFootbalEventsListProps} from './IFootbalEventsListProps';
-
+import {Events} from '../IWebPartFootbalEventsState';
 import styles from '../WebPartFootbalEvents.module.scss';
 
+export interface IFootbalEventsListState {
+  counter: number;
+  compactEvents: Events[];
+}
 
-export default class FootbalEventsList extends React.Component<IFootbalEventsListProps,{}> {
+export default class FootbalEventsList extends React.Component<IFootbalEventsListProps,IFootbalEventsListState> {
+
+    public state = {
+      counter: 0,
+      compactEvents: []
+    };
+
+    public componentDidMount(): void {
+      this._sliceEvents('');
+    }
+
+    private _sliceEvents(sign:string): void {
+      let counter = this.state.counter;
+      let count:number;
+      if (sign==='+') {
+        count=1;
+        counter += 3;
+      } else if (sign==='-'){
+        count=-1;
+        counter -= 3;
+      } else {
+        count=1;
+        counter = 0;
+      }
+      const filterArray = this.props.arrayEvents.slice(counter, counter + 3 * count);
+      this.setState({
+        compactEvents: filterArray
+      });
+    }
 
     private addEventOutlookCalendar(e: any, dateEvent: string, 
       strEvent: string, strLeague: string, strTime: string): void {
@@ -51,7 +83,7 @@ export default class FootbalEventsList extends React.Component<IFootbalEventsLis
               NameUser: userName,
               EventDate: dateEvent + 'T' + strTime,
               EndDate: dateEvent + 'T' + strTime,
-              CategoryFootball: strLeague,
+              //CategoryFootball: strLeague,
               Category: strSport
           });
 
@@ -60,9 +92,12 @@ export default class FootbalEventsList extends React.Component<IFootbalEventsLis
     public render(): React.ReactElement<IFootbalEventsListProps> {
         return(
           <div>
-              <button>Back</button>
+            <div>
+              {this.state.counter > 0 ?  <button className={styles.button} onClick={(e) => this._sliceEvents('-')}>Back</button> : null}
+              {this.state.counter === 20 ? null : <button className={styles.button} onClick={(e) => this._sliceEvents('+')}>Next</button>}
+            </div>
               <div>
-                {this.props.arrayEvents.map((item) => {
+                {this.state.compactEvents.map((item) => {
                   const re = /\s*\s*/;
                   const refactTime = item.strTime.split(re).splice(0, 5).join('');
                 return(
@@ -88,9 +123,7 @@ export default class FootbalEventsList extends React.Component<IFootbalEventsLis
                 );
                 })}
             </div>
-            <button>Next</button>
-          </div>
-            
+          </div> 
         )
     }
 }
