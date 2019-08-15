@@ -18,7 +18,6 @@ export default class WebPartFootbalEvents extends React.Component<IWebPartFootba
   };
 
   public componentDidMount() : void {
-    this._getArrayEventsWithApi();
     this._getItemsList();
     this._getUserData();
   }

@@ -45,7 +45,7 @@ export default class FootbalEventsList extends React.Component<IFootbalEventsLis
           e.preventDefault();
           const Web1 = (await import(/*webpackChunkName: '@pnp_sp' */ "@pnp/sp")).Web;
           let web = new Web1(this.props.context.pageContext.web.absoluteUrl + '/sites/Dev1');
-          
+
           web.lists.getById('80fed460-d7c5-499e-920b-32db6689236e').items.add({
               Title: strEvent,
               NameUser: userName,
@@ -59,12 +59,14 @@ export default class FootbalEventsList extends React.Component<IFootbalEventsLis
 
     public render(): React.ReactElement<IFootbalEventsListProps> {
         return(
-            <div>
+          <div>
+              <button>Back</button>
+              <div>
                 {this.props.arrayEvents.map((item) => {
                   const re = /\s*\s*/;
                   const refactTime = item.strTime.split(re).splice(0, 5).join('');
                 return(
-                    <div className={ styles.column } key={item.idEvent}>
+                    <div key={item.idEvent}>
                         <h1>{item.strEvent}</h1>
                         <h2>{item.strDate}</h2>
                         <p>{refactTime}</p>
@@ -85,7 +87,10 @@ export default class FootbalEventsList extends React.Component<IFootbalEventsLis
                     </div>
                 );
                 })}
+            </div>
+            <button>Next</button>
           </div>
+            
         )
     }
 }
