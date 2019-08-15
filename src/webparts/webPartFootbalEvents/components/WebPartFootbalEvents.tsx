@@ -68,7 +68,7 @@ export default class WebPartFootbalEvents extends React.Component<IWebPartFootba
 
 
   private _mapArrayItems(arrayData: Array<any>): void {
-    const filterArrayEvents = arrayData.filter((item) => item.Cells[3].Value !== 'Dev1 - FootbalList');
+    const filterArrayEvents = arrayData.filter((item) => item.Cells[3].Value !== 'FootbalList');
     const dataMap: Array<any> = [];
     filterArrayEvents.forEach((item) => {
         dataMap.push({

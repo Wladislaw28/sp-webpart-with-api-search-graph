@@ -21,22 +21,19 @@ export default class FootbalEventsList extends React.Component<IFootbalEventsLis
       this._sliceEvents('');
     }
 
-    private _sliceEvents(sign:string): void {
+    private _sliceEvents( sign: string ): void {
       let counter = this.state.counter;
-      let count:number;
-      if (sign==='+') {
-        count=1;
+      if (sign === '+') {
         counter += 3;
-      } else if (sign==='-'){
-        count=-1;
+      } else if ( sign === '-' ) {
         counter -= 3;
       } else {
-        count=1;
         counter = 0;
       }
-      const filterArray = this.props.arrayEvents.slice(counter, counter + 3 * count);
+      const filterArray = this.props.arrayEvents.slice(counter, counter + 3);
       this.setState({
-        compactEvents: filterArray
+        compactEvents: filterArray,
+        counter
       });
     }
 
@@ -93,8 +90,10 @@ export default class FootbalEventsList extends React.Component<IFootbalEventsLis
         return(
           <div>
             <div>
-              {this.state.counter > 0 ?  <button className={styles.button} onClick={(e) => this._sliceEvents('-')}>Back</button> : null}
-              {this.state.counter === 20 ? null : <button className={styles.button} onClick={(e) => this._sliceEvents('+')}>Next</button>}
+              {this.state.counter > 0 ? 
+               <button className={styles.button} onClick={() => this._sliceEvents('-')}>Back</button> : null}
+              {this.state.counter === 12 ? 
+              null : <button className={styles.button} onClick={() => this._sliceEvents('+')}>Next</button>}
             </div>
               <div>
                 {this.state.compactEvents.map((item) => {
