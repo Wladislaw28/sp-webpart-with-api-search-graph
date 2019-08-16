@@ -2,10 +2,54 @@
 
 .webPartFootbalEvents {
   .container {
-    max-width: 1073px;
-    margin: 0px auto;
-    height: 743px;
+    max-height: 1573px;
+    margin: 0 auto;
+    width: 743px;
   }
 
- 
+  .row {
+    @include ms-Grid-row;
+    @include ms-fontColor-white;
+    background-image: url('./img/backgr_webpart.png');
+    // background-repeat: no-repeat;
+    // background-position: center center;
+  }
+
+  .title_webpart {
+    margin: 0 auto;
+    font-size: 32px;
+    font-family: Georgia, serif;
+    font-weight: bold;
+    line-height: 40px;
+  }
+
+  .title_webpart_span {
+    margin: 0 auto;
+    font-size: 26px;
+    font-family: Georgia, serif;
+    font-weight: bold;
+    line-height: 30px;
+  }
+
+  .container_detailist {
+    width: 80%;
+    margin: 10%;
+    margin-top: 170px;
+  }
+
+  .container_football{
+    display: grid;
+    width: 660px;
+    height: 280px;
+    grid-template-columns: repeat(3, 1fr); 
+    grid-template-rows: repeat(3, 1fr); 
+    grid-gap: 10px;
+  }
+
+  .container_football_event{
+    margin-left: 50px;
+    width: 170px;
+    height: 280px;
+    background-color: black;
+  }
 }

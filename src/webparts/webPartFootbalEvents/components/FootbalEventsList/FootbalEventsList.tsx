@@ -88,39 +88,43 @@ export default class FootbalEventsList extends React.Component<IFootbalEventsLis
     public render(): React.ReactElement<IFootbalEventsListProps> {
         return(
           <div>
-            <div>
+             <div>
               {this.state.counter > 0 ? 
                <button onClick={() => this._sliceEvents('-')}>Back</button> : null}
               {this.state.counter === 12 ? 
               null : <button onClick={() => this._sliceEvents('+')}>Next</button>}
             </div>
-              <div>
-                {this.state.compactEvents.map((item) => {
-                  const re = /\s*\s*/;
-                  const refactTime = item.strTime.split(re).splice(0, 5).join('');
-                return(
-                    <div key={item.idEvent}>
-                        <h1>{item.strEvent}</h1>
-                        <h2>{item.strDate}</h2>
-                        <p>{refactTime}</p>
-                            <div>
-                                <p>Home team: {item.strHomeTeam}</p>
-                                <p>Away team: {item.strAwayTeam}</p>
-                            </div>
-                        <button onClick={(e) => {
+                
+            <div className={styles.container_football}>
+              
+             {this.state.compactEvents.map((item) => {
+               const re = /\s*\s*/;
+               const refactTime = item.strTime.split(re).splice(0, 5).join('');
+             return(
+                 <div key={item.idEvent}  className={styles.container_football_event}>
+                     <h1>{item.strEvent}</h1>
+                     <h2>{item.strDate}</h2>
+                     <p>{refactTime}</p>
+                         <div>
+                             <p>Home team: {item.strHomeTeam}</p>
+                             <p>Away team: {item.strAwayTeam}</p>
+                         </div>
+                     <button onClick={(e) => {
 
-                            this.addEventListCalendar(e,item.dateEvent, 
-                            item.strEvent, item.strLeague, item.strSport, item.strTime);
+                         this.addEventListCalendar(e,item.dateEvent, 
+                         item.strEvent, item.strLeague, item.strSport, item.strTime);
 
-                            this.addEventOutlookCalendar(e,item.dateEvent, 
-                            item.strEvent, item.strLeague, item.strTime); 
+                         this.addEventOutlookCalendar(e,item.dateEvent, 
+                         item.strEvent, item.strLeague, item.strTime); 
 
-                        }}>Sign Up</button>
-                    </div>
-                );
-                })}
-            </div>
+                     }}>Sign Up</button>
+                 </div>
+             );
+             })}
+
           </div> 
-        )
+      </div>
+          
+        );
     }
 }

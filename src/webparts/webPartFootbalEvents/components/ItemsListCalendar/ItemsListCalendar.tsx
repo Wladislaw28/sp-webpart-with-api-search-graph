@@ -34,7 +34,7 @@ export default class ItemsListCalendar extends React.Component<IItemsListCalenda
 
     public render(): React.ReactElement<{}>{
         return(
-            <div>
+            <div className={styles.container_detailist}>
                 <DetailsList items={this.props.arrayItemsList}
                                      columns={this.state.columns}
                                      setKey="set"
