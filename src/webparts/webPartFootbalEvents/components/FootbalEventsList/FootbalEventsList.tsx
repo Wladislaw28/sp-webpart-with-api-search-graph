@@ -69,19 +69,18 @@ export default class FootbalEventsList extends React.Component<IFootbalEventsLis
     }
   
     private async addEventListCalendar(e: any, dateEvent: string, strEvent: string, 
-      strLeague: string, userName: string, strSport: string, strTime: string) : Promise<any> {
+      strLeague: string, strSport: string, strTime: string) : Promise<any> {
 
           e.preventDefault();
           const Web1 = (await import(/*webpackChunkName: '@pnp_sp' */ "@pnp/sp")).Web;
-          let web = new Web1(this.props.context.pageContext.web.absoluteUrl + '/sites/Dev1');
+          let web = new Web1('https://mihasev28wmreply.sharepoint.com');
 
-          web.lists.getById('80fed460-d7c5-499e-920b-32db6689236e').items.add({
+          web.lists.getById('30289322-d788-4219-9783-02a984721df8').items.add({
               Title: strEvent,
-              NameUser: userName,
+              profilename: this.props.userName,
+              categorySport: strSport,
               EventDate: dateEvent + 'T' + strTime,
-              EndDate: dateEvent + 'T' + strTime,
-              //CategoryFootball: strLeague,
-              Category: strSport
+              EndDate: dateEvent + 'T' + strTime
           });
 
     }
@@ -111,7 +110,7 @@ export default class FootbalEventsList extends React.Component<IFootbalEventsLis
                         <button onClick={(e) => {
 
                             this.addEventListCalendar(e,item.dateEvent, 
-                            item.strEvent, item.strLeague, item.strSport, this.props.userName, item.strTime);
+                            item.strEvent, item.strLeague, item.strSport, item.strTime);
 
                             this.addEventOutlookCalendar(e,item.dateEvent, 
                             item.strEvent, item.strLeague, item.strTime); 

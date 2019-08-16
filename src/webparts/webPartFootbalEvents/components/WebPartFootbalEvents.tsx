@@ -52,7 +52,7 @@ export default class WebPartFootbalEvents extends React.Component<IWebPartFootba
   }
 
   private _getItemsList() : void {
-    fetch("https://mihasev28wmreply.sharepoint.com/search/_api/search/query?querytext='80fed460-d7c5-499e-920b-32db6689236e'&selectproperties='EventsRollUpStartDate%2c+Title'&clienttype='ContentSearchRegular'", 
+    fetch("https://mihasev28wmreply.sharepoint.com/search/_api/search/query?querytext='30289322-d788-4219-9783-02a984721df8'&selectproperties='EventsRollUpStartDate%2c+Title'&clienttype='ContentSearchRegular'", 
     {
       method: 'get',
             headers: {
@@ -68,7 +68,7 @@ export default class WebPartFootbalEvents extends React.Component<IWebPartFootba
 
 
   private _mapArrayItems(arrayData: Array<any>): void {
-    const filterArrayEvents = arrayData.filter((item) => item.Cells[3].Value !== 'FootbalList');
+    const filterArrayEvents = arrayData.filter((item) => item.Cells[3].Value !== 'Communication site - TenantListFootball');
     const dataMap: Array<any> = [];
     filterArrayEvents.forEach((item) => {
         dataMap.push({
@@ -102,7 +102,6 @@ export default class WebPartFootbalEvents extends React.Component<IWebPartFootba
     return (
       <div className={ styles.webPartFootbalEvents }>
         <div className={ styles.container }>
-        
               <h1>English Premier League</h1>
 
               {arrayFootbalEventsApi.length >= 1 ? <FootbalEventsList userName={userName} 
