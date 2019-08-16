@@ -1,3 +1,3 @@
 export interface IItemsListCalendarProps {
-    arrayItemsList: Array<any>
+    arrayItemsList: Array<any>;
 }

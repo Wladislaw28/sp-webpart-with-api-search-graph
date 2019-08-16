@@ -4,7 +4,7 @@
   .container {
     max-height: 1573px;
     margin: 0 auto;
-    width: 743px;
+    width: 700px;
   }
 
   .row {
@@ -15,26 +15,37 @@
     // background-position: center center;
   }
 
+  .container_title_img_wp {
+    display: flex;
+    justify-content: center;
+  }
+
+  .logo_wp {
+    margin-top: 35px;
+    margin-right: 12px;
+  }
+
   .title_webpart {
-    margin: 0 auto;
+    margin-right: 25px;
     font-size: 32px;
     font-family: Georgia, serif;
     font-weight: bold;
     line-height: 40px;
+    text-align: center;
   }
 
   .title_webpart_span {
-    margin: 0 auto;
     font-size: 26px;
     font-family: Georgia, serif;
     font-weight: bold;
     line-height: 30px;
+    text-align: center;
   }
 
   .container_detailist {
     width: 80%;
     margin: 10%;
-    margin-top: 170px;
+    margin-top: 120px;
   }
 
   .container_football{
@@ -44,12 +55,48 @@
     grid-template-columns: repeat(3, 1fr); 
     grid-template-rows: repeat(3, 1fr); 
     grid-gap: 10px;
+    margin-top: 30px;
   }
 
   .container_football_event{
     margin-left: 50px;
     width: 170px;
     height: 280px;
-    background-color: black;
+    background-color: rgba(0, 0, 0, 0.45);
+  }
+
+  .title_Event {
+    font-family: Georgia, serif;
+    font-weight: bold;
+    text-align: center;
+    font-size: 18px;
+    color: white;
+    line-height: 25px;
+    margin-top: 22px;
+  }
+
+  .title_Date {
+    font-family: Georgia, serif;
+    font-style: italic;
+    font-size: 14px;
+    color: white;
+    margin-left: 20px;
+    margin-top: 15px;
+  }
+
+  .title_Time {
+    font-family: Georgia, serif;
+    font-weight: bold;
+    font-size: 16px;
+    color: white;
+    text-align: center;
+    margin-top: 15px;
+  }
+
+  .title_Team {
+    margin-top: 15px;
+    margin-left: 15px;
+    font-family: Georgia, serif;
+    font-size: 12px;
   }
 }

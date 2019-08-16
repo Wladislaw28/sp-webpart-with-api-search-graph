@@ -2,39 +2,20 @@ import * as React from 'react';
 import { MSGraphClient } from '@microsoft/sp-http';
 import * as MicrosoftGraph from '@microsoft/microsoft-graph-types';
 import {IFootbalEventsListProps} from './IFootbalEventsListProps';
-import {Events} from '../IWebPartFootbalEventsState';
-import styles from '../WebPartFootbalEvents.module.scss';
+import {IFootbalEventsListState} from './IFootbalEventsListState';
+import Slider from '../Slider/Slider';
 
-export interface IFootbalEventsListState {
-  counter: number;
-  compactEvents: Events[];
-}
+import styles from '../WebPartFootbalEvents.module.scss';
 
 export default class FootbalEventsList extends React.Component<IFootbalEventsListProps,IFootbalEventsListState> {
 
     public state = {
-      counter: 0,
       compactEvents: []
     };
 
-    public componentDidMount(): void {
-      this._sliceEvents('');
-    }
 
-    private _sliceEvents( sign: string ): void {
-      let counter = this.state.counter;
-      if (sign === '+') {
-        counter += 3;
-      } else if ( sign === '-' ) {
-        counter -= 3;
-      } else {
-        counter = 0;
-      }
-      const filterArray = this.props.arrayEvents.slice(counter, counter + 3);
-      this.setState({
-        compactEvents: filterArray,
-        counter
-      });
+    public updateData(config: any) {
+      this.setState(config);
     }
 
     private addEventOutlookCalendar(e: any, dateEvent: string, 
@@ -69,7 +50,7 @@ export default class FootbalEventsList extends React.Component<IFootbalEventsLis
     }
   
     private async addEventListCalendar(e: any, dateEvent: string, strEvent: string, 
-      strLeague: string, strSport: string, strTime: string) : Promise<any> {
+     strSport: string, strTime: string) : Promise<any> {
 
           e.preventDefault();
           const Web1 = (await import(/*webpackChunkName: '@pnp_sp' */ "@pnp/sp")).Web;
@@ -79,6 +60,7 @@ export default class FootbalEventsList extends React.Component<IFootbalEventsLis
               Title: strEvent,
               profilename: this.props.userName,
               categorySport: strSport,
+              //sports: strSport,
               EventDate: dateEvent + 'T' + strTime,
               EndDate: dateEvent + 'T' + strTime
           });
@@ -88,31 +70,24 @@ export default class FootbalEventsList extends React.Component<IFootbalEventsLis
     public render(): React.ReactElement<IFootbalEventsListProps> {
         return(
           <div>
-             <div>
-              {this.state.counter > 0 ? 
-               <button onClick={() => this._sliceEvents('-')}>Back</button> : null}
-              {this.state.counter === 12 ? 
-              null : <button onClick={() => this._sliceEvents('+')}>Next</button>}
-            </div>
-                
+            <Slider arrayEvents={this.props.arrayEvents} update={this.updateData.bind(this)} /> 
             <div className={styles.container_football}>
-              
              {this.state.compactEvents.map((item) => {
                const re = /\s*\s*/;
                const refactTime = item.strTime.split(re).splice(0, 5).join('');
              return(
                  <div key={item.idEvent}  className={styles.container_football_event}>
-                     <h1>{item.strEvent}</h1>
-                     <h2>{item.strDate}</h2>
-                     <p>{refactTime}</p>
+                     <h1 className={styles.title_Event}>{item.strEvent}</h1>
+                     <p className={styles.title_Date}>{item.strDate}</p>
+                     <h2 className={styles.title_Time}>{refactTime}</h2>
                          <div>
-                             <p>Home team: {item.strHomeTeam}</p>
-                             <p>Away team: {item.strAwayTeam}</p>
+                             <p className={styles.title_Team}>Home team: {item.strHomeTeam}</p>
+                             <p className={styles.title_Team}>Away team: {item.strAwayTeam}</p>
                          </div>
                      <button onClick={(e) => {
 
                          this.addEventListCalendar(e,item.dateEvent, 
-                         item.strEvent, item.strLeague, item.strSport, item.strTime);
+                         item.strEvent, item.strSport, item.strTime);
 
                          this.addEventOutlookCalendar(e,item.dateEvent, 
                          item.strEvent, item.strLeague, item.strTime); 

@@ -6,6 +6,7 @@ import {IWebPartFootbalEventsState, Events} from './IWebPartFootbalEventsState';
 import FootbalEventsList from './FootbalEventsList/FootbalEventsList';
 import ItemsListCalendar from './ItemsListCalendar/ItemsListCalendar';
 
+
 import styles from './WebPartFootbalEvents.module.scss';
 
 
@@ -52,7 +53,7 @@ export default class WebPartFootbalEvents extends React.Component<IWebPartFootba
   }
 
   private _getItemsList() : void {
-    fetch("https://mihasev28wmreply.sharepoint.com/search/_api/search/query?querytext='30289322-d788-4219-9783-02a984721df8'&selectproperties='EventsRollUpStartDate%2c+Title'&clienttype='ContentSearchRegular'", 
+    fetch("https://mihasev28wmreply.sharepoint.com/search/_api/search/query?querytext='30289322-d788-4219-9783-02a984721df8'&selectproperties='Title%2c+EventsRollUpStartDate%2c+titleCategory%2c+titleProfileName'&clienttype='ContentSearchRegular'", 
     {
       method: 'get',
             headers: {
@@ -68,12 +69,15 @@ export default class WebPartFootbalEvents extends React.Component<IWebPartFootba
 
 
   private _mapArrayItems(arrayData: Array<any>): void {
-    const filterArrayEvents = arrayData.filter((item) => item.Cells[3].Value !== 'Communication site - TenantListFootball');
+    const filterArrayEvents = arrayData.filter((item) => item.Cells[2].Value !== 'Communication site - TenantListFootball');
+    console.log(filterArrayEvents);
     const dataMap: Array<any> = [];
     filterArrayEvents.forEach((item) => {
         dataMap.push({
-            Title: item.Cells[3].Value,
-            StartDate: item.Cells[2].Value
+            Title: item.Cells[2].Value,
+            StartDate: item.Cells[3].Value,
+            ProfileName: item.Cells[5].Value,
+            Category: item.Cells[4].Value
         });
         this.setState({
             arrayItemsList: dataMap
@@ -103,11 +107,13 @@ export default class WebPartFootbalEvents extends React.Component<IWebPartFootba
       <div className={ styles.webPartFootbalEvents }>
         <div className={ styles.container }>
           <div className={styles.row}>
-            <h1 className={styles.title_webpart}><span className={styles.title_webpart_span}>English</span><br/> Premier League</h1>
+            <div className={styles.container_title_img_wp}>
+              <img className={styles.logo_wp} src={require('./img/logo_webpart.png')} width="60" height="60" alt="logoWP"/>
+              <h1 className={styles.title_webpart}><span className={styles.title_webpart_span}>English</span><br/> Premier League</h1>
+            </div>
 
             {arrayFootbalEventsApi.length >= 1 ? <FootbalEventsList userName={userName} 
             arrayEvents={arrayFootbalEventsApi} context={this.props.context} /> : null}
-
             {arrayItemsList.length >= 1 ? <ItemsListCalendar arrayItemsList={arrayItemsList} /> : null}
           </div>
         </div>
