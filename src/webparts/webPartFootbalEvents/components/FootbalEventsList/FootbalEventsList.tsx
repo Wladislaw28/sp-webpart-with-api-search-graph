@@ -84,7 +84,7 @@ export default class FootbalEventsList extends React.Component<IFootbalEventsLis
                              <p className={styles.title_Team}>Home team: {item.strHomeTeam}</p>
                              <p className={styles.title_Team}>Away team: {item.strAwayTeam}</p>
                          </div>
-                     <button onClick={(e) => {
+                     <button className={styles.button} onClick={(e) => {
 
                          this.addEventListCalendar(e,item.dateEvent, 
                          item.strEvent, item.strSport, item.strTime);
