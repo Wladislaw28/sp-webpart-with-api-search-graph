@@ -1,5 +1,5 @@
 import {Events} from '../IWebPartFootbalEventsState';
 
-export interface IFootbalEventsListState {
+export interface IFootballEventsListState {
     compactEvents: Events[];
 }

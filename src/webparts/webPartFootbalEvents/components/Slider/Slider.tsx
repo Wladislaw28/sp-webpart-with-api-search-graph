@@ -34,11 +34,17 @@ import styles from '../WebPartFootbalEvents.module.scss';
     public render(): React.ReactElement<ISliderEventsProps>{
         return(
             <div>
-                <div>
+                <div className={styles.container_slider}>
                     {this.state.counter > 0 ? 
-                    <button onClick={() => this._sliceEvents('-')}>Back</button> : null}
-                    {this.state.counter === 12 ? 
-                    null : <button onClick={() => this._sliceEvents('+')}>Next</button>}
+                    <a onClick={() => this._sliceEvents('-')}>
+                        <img className={styles.img_slider_next_back} src={require('../img/стрелка_лево.png')} alt="Back" />
+                    </a> 
+                    : null}
+                        <div className={styles.container_null_slider}></div>
+                    {this.state.counter === 12 ? null : 
+                    <a onClick={() => this._sliceEvents('+')}>
+                        <img className={styles.img_slider_next_back} src={require('../img/стрелка_право.png')} alt="Next" />
+                    </a>}
                 </div>
             </div>
         );

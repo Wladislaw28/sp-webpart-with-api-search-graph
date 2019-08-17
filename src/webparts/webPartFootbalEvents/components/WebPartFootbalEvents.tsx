@@ -3,12 +3,11 @@ import { MSGraphClient } from '@microsoft/sp-http';
 import * as MicrosoftGraph from '@microsoft/microsoft-graph-types';
 import { IWebPartFootbalEventsProps } from './IWebPartFootbalEventsProps';
 import {IWebPartFootbalEventsState, Events} from './IWebPartFootbalEventsState';
-import FootbalEventsList from './FootbalEventsList/FootbalEventsList';
+import FootballEventsList from './FootballEventsList/FootballEventsList';
 import ItemsListCalendar from './ItemsListCalendar/ItemsListCalendar';
 
 
 import styles from './WebPartFootbalEvents.module.scss';
-
 
 export default class WebPartFootbalEvents extends React.Component<IWebPartFootbalEventsProps, IWebPartFootbalEventsState> {
 
@@ -112,7 +111,7 @@ export default class WebPartFootbalEvents extends React.Component<IWebPartFootba
               <h1 className={styles.title_webpart}><span className={styles.title_webpart_span}>English</span><br/> Premier League</h1>
             </div>
 
-            {arrayFootbalEventsApi.length >= 1 ? <FootbalEventsList userName={userName} 
+            {arrayFootbalEventsApi.length >= 1 ? <FootballEventsList userName={userName} 
             arrayEvents={arrayFootbalEventsApi} context={this.props.context} /> : null}
             {arrayItemsList.length >= 1 ? <ItemsListCalendar arrayItemsList={arrayItemsList} /> : null}
           </div>

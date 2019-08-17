@@ -16,7 +16,7 @@ export interface Events {
     strSport: string;
   }
   
-  export interface IFootbalEventsListProps {
+  export interface IFootballEventsListProps {
     arrayEvents : Events[];
     userName: string;
     context: WebPartContext;
