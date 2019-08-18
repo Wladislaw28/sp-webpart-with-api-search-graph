@@ -2,7 +2,7 @@ import * as React from 'react';
 import { MSGraphClient } from '@microsoft/sp-http';
 import * as MicrosoftGraph from '@microsoft/microsoft-graph-types';
 import {IFootballEventProps} from './IFootballEventProps';
-
+import {urlTenant, idListCalendar} from '../../constans';
 import styles from '../../WebPartFootbalEvents.module.scss';
 
 export default class FootballEvent extends React.Component<IFootballEventProps,{}> {
@@ -43,9 +43,9 @@ export default class FootballEvent extends React.Component<IFootballEventProps,{
              e.preventDefault();
 
              const Web1 = (await import(/*webpackChunkName: '@pnp_sp' */ "@pnp/sp")).Web;
-             let web = new Web1('https://mihasev28wmreply.sharepoint.com');
+             let web = new Web1(urlTenant);
    
-             web.lists.getById('30289322-d788-4219-9783-02a984721df8').items.add({
+             web.lists.getById(idListCalendar).items.add({
                  Title: Event,
                  profilename: this.props.username,
                  categorySport: Sport,

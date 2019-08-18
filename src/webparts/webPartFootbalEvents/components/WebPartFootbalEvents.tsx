@@ -5,7 +5,7 @@ import { IWebPartFootbalEventsProps } from './IWebPartFootbalEventsProps';
 import {IWebPartFootbalEventsState, Events} from './IWebPartFootbalEventsState';
 import FootballEventsList from './FootballEventsList/FootballEventsList';
 import ItemsListCalendar from './ItemsListCalendar/ItemsListCalendar';
-
+import {urlApi, idListCalendar, titleListCalendar, urlTenant, setLocalStorage} from './constans';
 
 import styles from './WebPartFootbalEvents.module.scss';
 
@@ -18,41 +18,51 @@ export default class WebPartFootbalEvents extends React.Component<IWebPartFootba
   };
 
   public componentDidMount() : void {
-    this._getItemsList();
     this._getUserData();
   }
 
   public componentWillMount(): void {
-    if (localStorage.getItem("arrayEventsApi") === null) {
+    if (localStorage.getItem("arrayEventsApi") === null 
+    && localStorage.getItem("arrayItemsListCalendar") === null ) {
         this._getArrayEventsWithApi();
+        this._getItemsList();
     } else {
-         this.getLocalStorage();
+      this.getLocalStorageEventsApi();
+      this.getLocalStorageListCalendar();
     }
   }
 
-  public getLocalStorage() : void {
-    const json: string | null  = localStorage.getItem("arrayEventsApi");
-    const arrayEventsApi = JSON.parse(json);
+  public getLocalStorageListCalendar() : void {
+    const json: string | null  = localStorage.getItem("arrayItemsListCalendar");
+    const arrayListCalendar = JSON.parse(json);
     this.setState({
-      arrayFootbalEventsApi: arrayEventsApi
-    })
+        arrayItemsList: arrayListCalendar
+      });
   }
 
-  public setLocalStorage( eventsApi:Events[] ) : void {
-    const arrayEventsApi = JSON.stringify(this.state.arrayFootbalEventsApi);
-    localStorage.setItem("arrayEventsApi", arrayEventsApi);
+  public getLocalStorageEventsApi() : void {
+    const json: string | null  = localStorage.getItem("arrayEventsApi");
+    const arrayEventsApi = JSON.parse(json);
+    const nowDate = new Date().toJSON().slice(0,10).replace(/-/g,'-');
+    if(arrayEventsApi['0'].dateEvent === nowDate){
+      this.setState({
+        arrayFootbalEventsApi: arrayEventsApi
+      });
+    } else {
+      this._getArrayEventsWithApi();
+    }
   }
 
   private _getArrayEventsWithApi() : void {
-    fetch(`https://api.allorigins.win/raw?url=${encodeURIComponent('https://www.thesportsdb.com/api/v1/json/1/eventsnextleague.php?id=4328')}`)
+    fetch(`https://api.allorigins.win/raw?url=${encodeURIComponent(urlApi)}`)
       .then((response) => response.json())
       .then( (dataRespo) => this.setState({
         arrayFootbalEventsApi: dataRespo.events 
-      }, () => this.setLocalStorage(this.state.arrayFootbalEventsApi)));
+      }, () => setLocalStorage(this.state.arrayFootbalEventsApi, 'arrayEventsApi')));
   }
 
   private _getItemsList() : void {
-    fetch("https://mihasev28wmreply.sharepoint.com/search/_api/search/query?querytext='30289322-d788-4219-9783-02a984721df8'&selectproperties='Title%2c+EventsRollUpStartDate%2c+titleCategory%2c+titleProfileName'&clienttype='ContentSearchRegular'", 
+    fetch(`${urlTenant}/search/_api/search/query?querytext='${idListCalendar}'&selectproperties='Title%2c+EventsRollUpStartDate%2c+titleCategory%2c+titleProfileName'&clienttype='ContentSearchRegular'`, 
     {
       method: 'get',
             headers: {
@@ -68,8 +78,7 @@ export default class WebPartFootbalEvents extends React.Component<IWebPartFootba
 
 
   private _mapArrayItems(arrayData: Array<any>): void {
-    const filterArrayEvents = arrayData.filter((item) => item.Cells[2].Value !== 'Communication site - TenantListFootball');
-    console.log(filterArrayEvents);
+    const filterArrayEvents = arrayData.filter((item) => item.Cells[2].Value !== titleListCalendar);
     const dataMap: Array<any> = [];
     filterArrayEvents.forEach((item) => {
         dataMap.push({
@@ -80,7 +89,7 @@ export default class WebPartFootbalEvents extends React.Component<IWebPartFootba
         });
         this.setState({
             arrayItemsList: dataMap
-        });
+        }, () => setLocalStorage(this.state.arrayItemsList, 'arrayItemsListCalendar'));
     });
 }
 
@@ -110,7 +119,6 @@ export default class WebPartFootbalEvents extends React.Component<IWebPartFootba
               <img className={styles.logo_wp} src={require('./img/logo_webpart.png')} width="60" height="60" alt="logoWP"/>
               <h1 className={styles.title_webpart}><span className={styles.title_webpart_span}>English</span><br/> Premier League</h1>
             </div>
-
             {arrayFootbalEventsApi.length >= 1 ? <FootballEventsList userName={userName} 
             arrayEvents={arrayFootbalEventsApi} context={this.props.context} /> : null}
             {arrayItemsList.length >= 1 ? <ItemsListCalendar arrayItemsList={arrayItemsList} /> : null}

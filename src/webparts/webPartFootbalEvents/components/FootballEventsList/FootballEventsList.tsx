@@ -3,6 +3,7 @@ import {IFootballEventsListProps} from './IFootballEventsListProps';
 import {IFootballEventsListState} from './IFootballEventsListState';
 import Slider from '../Slider/Slider';
 import FootballEvent from './FootballEvent/FootballEvent';
+
 import styles from '../WebPartFootbalEvents.module.scss';
 
 export default class FootballEventsList extends React.Component<IFootballEventsListProps,IFootballEventsListState> {

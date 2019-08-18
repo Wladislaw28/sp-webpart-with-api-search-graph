@@ -22,7 +22,7 @@ export default class WebPartFootbalEventsWebPart extends BaseClientSideWebPart<I
 }
 
   public render(): void {
-    const element: React.ReactElement<IWebPartFootbalEventsProps > = React.createElement(
+    const element: React.ReactElement<IWebPartFootbalEventsProps> = React.createElement(
       WebPartFootbalEvents,
       {
         context: this.context

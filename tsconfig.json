@@ -29,7 +29,7 @@
     ]
   },
   "include": [
-    "src/**/*.ts"
+    "src/**/*.ts", "src/webparts/webPartFootbalEvents/components/constans.tsx"
   ],
   "exclude": [
     "node_modules",
