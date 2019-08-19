@@ -18,4 +18,5 @@ export interface Events {
     arrayFootbalEventsApi : Events[];
     userName: string;
     arrayItemsList: Array<any>;
+    newItem: object;
   }

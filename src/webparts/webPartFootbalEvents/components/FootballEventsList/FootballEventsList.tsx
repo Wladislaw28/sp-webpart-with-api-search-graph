@@ -3,17 +3,18 @@ import {IFootballEventsListProps} from './IFootballEventsListProps';
 import {IFootballEventsListState} from './IFootballEventsListState';
 import Slider from '../Slider/Slider';
 import FootballEvent from './FootballEvent/FootballEvent';
-
 import styles from '../WebPartFootbalEvents.module.scss';
 
 export default class FootballEventsList extends React.Component<IFootballEventsListProps,IFootballEventsListState> {
 
     public state = {
-      compactEvents: []
+      compactEvents: [],
+      newItem: {}
     };
 
     public updateData(config: any) {
       this.setState(config);
+      this.props.update({newItem: config.newItem});
     }
 
     public render(): React.ReactElement<IFootballEventsListProps> {

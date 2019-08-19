@@ -1,4 +1,4 @@
-import { WebPartContext  } from "@microsoft/sp-webpart-base";
+import { MSGraphClientFactory } from '@microsoft/sp-http';
 
 export interface Events {
     idEvent: string;
@@ -19,5 +19,6 @@ export interface Events {
   export interface IFootballEventsListProps {
     arrayEvents : Events[];
     userName: string;
-    context: WebPartContext;
+    context: MSGraphClientFactory;
+    update: (any) => any;
   }

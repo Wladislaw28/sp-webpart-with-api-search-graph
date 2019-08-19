@@ -25,7 +25,7 @@ export default class WebPartFootbalEventsWebPart extends BaseClientSideWebPart<I
     const element: React.ReactElement<IWebPartFootbalEventsProps> = React.createElement(
       WebPartFootbalEvents,
       {
-        context: this.context
+        context: this.context.msGraphClientFactory
       }
     );
 

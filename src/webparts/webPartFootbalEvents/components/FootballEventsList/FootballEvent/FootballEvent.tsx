@@ -1,16 +1,13 @@
 import * as React from 'react';
 import { MSGraphClient } from '@microsoft/sp-http';
-import * as MicrosoftGraph from '@microsoft/microsoft-graph-types';
 import {IFootballEventProps} from './IFootballEventProps';
 import {urlTenant, idListCalendar} from '../../constans';
 import styles from '../../WebPartFootbalEvents.module.scss';
 
 export default class FootballEvent extends React.Component<IFootballEventProps,{}> {
 
-    private addEventOutlookCalendar(e: any, EventDate: string, 
+    private addEventOutlookCalendar(EventDate: string, 
         Event: string, League: string, Time: string): void {
-          e.preventDefault();
-
           const subject = Event;
           const body = {
             "contentType": "HTML",
@@ -27,7 +24,7 @@ export default class FootballEvent extends React.Component<IFootballEventProps,{
             "timeZone": "UTC"
           };
     
-        this.props.context.msGraphClientFactory.getClient().then((client: MSGraphClient): void => {
+        this.props.context.getClient().then((client: MSGraphClient): void => {
               client.api('/me/events').post({subject,body,start,end}, (error, res) => {
                 if (error) {
                   console.error(error);
@@ -38,21 +35,20 @@ export default class FootballEvent extends React.Component<IFootballEventProps,{
         });
       }
 
-    private async addEventListCalendar(e: any, EventDate: string, Event: string, 
+    private async addEventListCalendar(EventDate: string, Event: string, 
         Sport: string, Time: string) : Promise<any> {
-             e.preventDefault();
-
              const Web1 = (await import(/*webpackChunkName: '@pnp_sp' */ "@pnp/sp")).Web;
              let web = new Web1(urlTenant);
-   
-             web.lists.getById(idListCalendar).items.add({
-                 Title: Event,
-                 profilename: this.props.username,
-                 categorySport: Sport,
-                 //sports: strSport,
-                 EventDate: EventDate + 'T' + Time,
-                 EndDate: EventDate + 'T' + Time
-             });
+             let newItem = {
+                Title: Event,
+                profilename: this.props.username,
+                categorySport: Sport,
+                //sports: strSport,
+                EventDate: EventDate + 'T' + Time,
+                EndDate: EventDate + 'T' + Time
+            };
+            web.lists.getById(idListCalendar).items.add(newItem);
+            this.props.update({newItem: newItem});
        }
 
     public render(): React.ReactElement<IFootballEventProps> {
@@ -67,10 +63,10 @@ export default class FootballEvent extends React.Component<IFootballEventProps,{
                              <p className={styles.title_Team}>Away team: {AwayTeam}</p>
                          </div>
                      <a className={styles.button} onClick={(e) => {
-                         this.addEventListCalendar(e, EventDate, 
+                         this.addEventListCalendar(EventDate, 
                             Event, Sport, Time);
 
-                         this.addEventOutlookCalendar(e, EventDate, 
+                         this.addEventOutlookCalendar(EventDate, 
                             Event, League, Time); 
                      }}>Sign Up</a>
             </div>

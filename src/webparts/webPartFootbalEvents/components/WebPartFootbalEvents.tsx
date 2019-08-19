@@ -5,7 +5,7 @@ import { IWebPartFootbalEventsProps } from './IWebPartFootbalEventsProps';
 import {IWebPartFootbalEventsState, Events} from './IWebPartFootbalEventsState';
 import FootballEventsList from './FootballEventsList/FootballEventsList';
 import ItemsListCalendar from './ItemsListCalendar/ItemsListCalendar';
-import {urlApi, idListCalendar, titleListCalendar, urlTenant, setLocalStorage} from './constans';
+import {urlApi, idListCalendar, titleListCalendar, urlTenant, setLocalStorage, minut15} from './constans';
 
 import styles from './WebPartFootbalEvents.module.scss';
 
@@ -14,11 +14,16 @@ export default class WebPartFootbalEvents extends React.Component<IWebPartFootba
   public state = {
     arrayFootbalEventsApi: [],
     arrayItemsList: [],
-    userName: ''
+    userName: '',
+    newItem: {}
   };
 
   public componentDidMount() : void {
     this._getUserData();
+  }
+
+  public updateData(config: any) {
+    this.setState(config);
   }
 
   public componentWillMount(): void {
@@ -35,9 +40,15 @@ export default class WebPartFootbalEvents extends React.Component<IWebPartFootba
   public getLocalStorageListCalendar() : void {
     const json: string | null  = localStorage.getItem("arrayItemsListCalendar");
     const arrayListCalendar = JSON.parse(json);
-    this.setState({
-        arrayItemsList: arrayListCalendar
+    const timeNow = new Date();
+    const minus = +timeNow - arrayListCalendar.time;
+    if(minus < minut15) {
+      this.setState({
+        arrayItemsList: arrayListCalendar.array
       });
+    } else {
+      this._getItemsList();
+    }
   }
 
   public getLocalStorageEventsApi() : void {
@@ -73,6 +84,7 @@ export default class WebPartFootbalEvents extends React.Component<IWebPartFootba
         .then((data) => data.PrimaryQueryResult.RelevantResults.Table.Rows)
           .then((resp) => {
             this._mapArrayItems(resp);
+            console.log(resp);
           });
   }
 
@@ -94,14 +106,14 @@ export default class WebPartFootbalEvents extends React.Component<IWebPartFootba
 }
 
   private _getUserData(): void {
-    this.props.context.msGraphClientFactory.getClient().then((client: MSGraphClient): void => {
+    this.props.context.getClient().then((client: MSGraphClient): void => {
         client.api('/me').get((error, user: MicrosoftGraph.User, rawResponse?: any) => {
             if (error) {
                 console.error(error);
                 return;
             }
             this.setState({
-                userName: user.displayName,
+                userName: user.displayName
             });
         });
     });
@@ -120,7 +132,7 @@ export default class WebPartFootbalEvents extends React.Component<IWebPartFootba
               <h1 className={styles.title_webpart}><span className={styles.title_webpart_span}>English</span><br/> Premier League</h1>
             </div>
             {arrayFootbalEventsApi.length >= 1 ? <FootballEventsList userName={userName} 
-            arrayEvents={arrayFootbalEventsApi} context={this.props.context} /> : null}
+            arrayEvents={arrayFootbalEventsApi} context={this.props.context} update={this.updateData.bind(this)} /> : null}
             {arrayItemsList.length >= 1 ? <ItemsListCalendar arrayItemsList={arrayItemsList} /> : null}
           </div>
         </div>
