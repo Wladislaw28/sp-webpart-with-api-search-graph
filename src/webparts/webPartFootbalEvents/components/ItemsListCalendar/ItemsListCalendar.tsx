@@ -12,7 +12,7 @@ export default class ItemsListCalendar extends React.Component<IItemsListCalenda
     };
 
     public componentDidMount() : void {
-        this._columsCreate(['Title','StartDate','ProfileName','Category']);
+        this._columsCreate(['Title','EventDate','profilename','categorySport']);
     }
 
     private _columsCreate(arraySelect: Array<any>): void {
@@ -28,7 +28,7 @@ export default class ItemsListCalendar extends React.Component<IItemsListCalenda
             });
         });
         this.setState({
-            columns: columns
+            columns
         });
     }
 

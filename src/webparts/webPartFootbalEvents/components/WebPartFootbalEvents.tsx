@@ -23,7 +23,22 @@ export default class WebPartFootbalEvents extends React.Component<IWebPartFootba
   }
 
   public updateData(config: any) {
-    this.setState(config);
+    this.setState({
+      newItem: config.newItem
+    }, () => {
+      if(this.state.newItem !== undefined){
+        this._addNewItem(this.state.newItem);
+      }
+    });
+  }
+
+  private _addNewItem(item: any) : void {
+      const arrayList = this.state.arrayItemsList;
+      arrayList.push(item);
+      this.setState({
+        arrayItemsList: arrayList,
+        newItem: {}
+      },() => setLocalStorage(this.state.arrayItemsList, 'arrayItemsListCalendar'));
   }
 
   public componentWillMount(): void {
@@ -84,7 +99,6 @@ export default class WebPartFootbalEvents extends React.Component<IWebPartFootba
         .then((data) => data.PrimaryQueryResult.RelevantResults.Table.Rows)
           .then((resp) => {
             this._mapArrayItems(resp);
-            console.log(resp);
           });
   }
 
@@ -95,9 +109,9 @@ export default class WebPartFootbalEvents extends React.Component<IWebPartFootba
     filterArrayEvents.forEach((item) => {
         dataMap.push({
             Title: item.Cells[2].Value,
-            StartDate: item.Cells[3].Value,
-            ProfileName: item.Cells[5].Value,
-            Category: item.Cells[4].Value
+            EventDate: item.Cells[3].Value,
+            profilename: item.Cells[5].Value,
+            categorySport: item.Cells[4].Value
         });
         this.setState({
             arrayItemsList: dataMap
