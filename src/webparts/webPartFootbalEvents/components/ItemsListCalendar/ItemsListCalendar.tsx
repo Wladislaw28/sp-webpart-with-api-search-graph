@@ -45,6 +45,6 @@ export default class ItemsListCalendar extends React.Component<IItemsListCalenda
                                      ariaLabelForSelectionColumn="Toggle selection"
                                      ariaLabelForSelectAllCheckbox="Toggle selection for all items" />
                 </div>
-        )
+        );
     }
 }

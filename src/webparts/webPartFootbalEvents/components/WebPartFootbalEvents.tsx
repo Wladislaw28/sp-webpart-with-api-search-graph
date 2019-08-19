@@ -5,7 +5,8 @@ import { IWebPartFootbalEventsProps } from './IWebPartFootbalEventsProps';
 import {IWebPartFootbalEventsState, Events} from './IWebPartFootbalEventsState';
 import FootballEventsList from './FootballEventsList/FootballEventsList';
 import ItemsListCalendar from './ItemsListCalendar/ItemsListCalendar';
-import {urlApi, idListCalendar, titleListCalendar, urlTenant, setLocalStorage, minut15} from './constans';
+import {urlApi, idListCalendar, titleListCalendar, urlTenant, minut15} from './constans';
+import {setLocalStorage} from './setLocalStorage';
 
 import styles from './WebPartFootbalEvents.module.scss';
 
@@ -20,6 +21,17 @@ export default class WebPartFootbalEvents extends React.Component<IWebPartFootba
 
   public componentDidMount() : void {
     this._getUserData();
+  }
+
+  public componentWillMount(): void {
+    if (localStorage.getItem("arrayEventsApi") === null 
+    && localStorage.getItem("arrayItemsListCalendar") === null ) {
+        this._getArrayEventsWithApi();
+        this._getItemsList();
+    } else {
+        this.getLocalStorageEventsApi();
+        this.getLocalStorageListCalendar();
+    }
   }
 
   public updateData(config: any) {
@@ -41,18 +53,7 @@ export default class WebPartFootbalEvents extends React.Component<IWebPartFootba
       },() => setLocalStorage(this.state.arrayItemsList, 'arrayItemsListCalendar'));
   }
 
-  public componentWillMount(): void {
-    if (localStorage.getItem("arrayEventsApi") === null 
-    && localStorage.getItem("arrayItemsListCalendar") === null ) {
-        this._getArrayEventsWithApi();
-        this._getItemsList();
-    } else {
-      this.getLocalStorageEventsApi();
-      this.getLocalStorageListCalendar();
-    }
-  }
-
-  public getLocalStorageListCalendar() : void {
+  private getLocalStorageListCalendar() : void {
     const json: string | null  = localStorage.getItem("arrayItemsListCalendar");
     const arrayListCalendar = JSON.parse(json);
     const timeNow = new Date();
@@ -66,7 +67,7 @@ export default class WebPartFootbalEvents extends React.Component<IWebPartFootba
     }
   }
 
-  public getLocalStorageEventsApi() : void {
+  private getLocalStorageEventsApi() : void {
     const json: string | null  = localStorage.getItem("arrayEventsApi");
     const arrayEventsApi = JSON.parse(json);
     const nowDate = new Date().toJSON().slice(0,10).replace(/-/g,'-');

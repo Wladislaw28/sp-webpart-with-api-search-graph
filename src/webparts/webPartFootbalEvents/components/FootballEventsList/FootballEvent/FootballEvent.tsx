@@ -2,9 +2,62 @@ import * as React from 'react';
 import { MSGraphClient } from '@microsoft/sp-http';
 import {IFootballEventProps} from './IFootballEventProps';
 import {urlTenant, idListCalendar} from '../../constans';
+import {setLocalStorage} from '../../setLocalStorage';
+
 import styles from '../../WebPartFootbalEvents.module.scss';
 
 export default class FootballEvent extends React.Component<IFootballEventProps,{}> {
+
+    public state = {
+        isStatusButton: false
+    };
+
+    private onCheckItem(Event: string, nameTitleButton: string, EventDate: string, League: string, Time: string, Sport: string ): void {
+        this.setState({
+            isStatusButton: !this.state.isStatusButton
+        }, () => this.checkItem(this.state.isStatusButton, Event, nameTitleButton, EventDate, League, Time, Sport));
+     }
+
+     private checkItem(isStatusButton: boolean, Event: string, nameTitleButton: string, EventDate: string, League: string, Time: string, Sport: string ): void {
+        const json: string | null  = localStorage.getItem("arrayItemsListCalendar");
+        const arrayListCalendar = JSON.parse(json);
+
+            arrayListCalendar.array.map((item,index) => {
+                if(item.Title === Event && item.profilename === this.props.username ){
+                    if(isStatusButton === true) {
+                        arrayListCalendar.array.splice(index, 1);   
+                        setLocalStorage(arrayListCalendar.array, 'arrayItemsListCalendar');
+
+                        if(nameTitleButton === 'Interesting'){
+                            this.addEventListCalendar(EventDate, 
+                                Event, Sport, Time);
+                        } else {
+                            this.addEventListCalendar(EventDate, 
+                                Event, Sport, Time);
+                            this.addEventOutlookCalendar(EventDate, 
+                                Event, League, Time); 
+                        }
+                    } else {
+                        arrayListCalendar.array.splice(index, 1);   
+                        setLocalStorage(arrayListCalendar.array, 'arrayItemsListCalendar');
+                        
+                    }
+                } else {
+                    if(isStatusButton === true){
+                        if(nameTitleButton === 'Interesting'){
+                            this.addEventListCalendar(EventDate, 
+                                Event, Sport, Time);
+                        } else {
+                            this.addEventListCalendar(EventDate, 
+                                Event, Sport, Time);
+                            this.addEventOutlookCalendar(EventDate, 
+                                Event, League, Time); 
+                        }
+                    }
+                }
+            });
+     }
+
 
     private addEventOutlookCalendar(EventDate: string, 
         Event: string, League: string, Time: string): void {
@@ -43,11 +96,11 @@ export default class FootballEvent extends React.Component<IFootballEventProps,{
                 Title: Event,
                 profilename: this.props.username,
                 categorySport: Sport,
-                //sports: strSport,
                 EventDate: EventDate + 'T' + Time,
                 EndDate: EventDate + 'T' + Time
             };
             web.lists.getById(idListCalendar).items.add(newItem);
+            web.lists.getById(idListCalendar).items.get().then((r) => console.log(r));
             this.props.update({newItem: newItem});
        }
 
@@ -62,13 +115,15 @@ export default class FootballEvent extends React.Component<IFootballEventProps,{
                              <p className={styles.title_Team}>Home team: {HomeTeam}</p>
                              <p className={styles.title_Team}>Away team: {AwayTeam}</p>
                          </div>
-                     <a className={styles.button} onClick={(e) => {
-                         this.addEventListCalendar(EventDate, 
-                            Event, Sport, Time);
 
-                         this.addEventOutlookCalendar(EventDate, 
-                            Event, League, Time); 
-                     }}>Sign Up</a>
+                     <a className={styles.button} onClick={(e) => {
+                         this.onCheckItem(Event,'go', EventDate, League, Time, Sport);
+                     }}>Let's go</a>
+
+                     <a className={styles.button} onClick={(e) => {
+                         this.onCheckItem(Event,'Interesting', EventDate, League, Time, Sport);
+                     }}>Interesting</a>
+
             </div>
         );
     }
