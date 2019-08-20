@@ -9,12 +9,13 @@ export default class FootballEventsList extends React.Component<IFootballEventsL
 
     public state = {
       compactEvents: [],
-      newItem: {}
+      newItem: []
     };
 
     public updateData(config: any) {
-      this.setState(config);
-      this.props.update({newItem: config.newItem});
+      this.setState(config, () => {
+        this.props.update({arrayItemsList: this.state.newItem});
+      });
     }
 
     public render(): React.ReactElement<IFootballEventsListProps> {

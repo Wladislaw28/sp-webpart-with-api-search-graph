@@ -35,11 +35,9 @@ export default class WebPartFootbalEvents extends React.Component<IWebPartFootba
   }
 
   public updateData(config: any) {
-    this.setState({
-      newItem: config.newItem
-    }, () => {
-      if(this.state.newItem !== undefined){
-        this._addNewItem(this.state.newItem);
+    this.setState( config, () => {
+      if(this.state.arrayItemsList === [] || this.state.arrayItemsList.length === 0 ){
+        this.getLocalStorageListCalendar();
       }
     });
   }
@@ -89,7 +87,7 @@ export default class WebPartFootbalEvents extends React.Component<IWebPartFootba
   }
 
   private _getItemsList() : void {
-    fetch(`${urlTenant}/search/_api/search/query?querytext='${idListCalendar}'&selectproperties='Title%2c+EventsRollUpStartDate%2c+titleCategory%2c+titleProfileName'&clienttype='ContentSearchRegular'`, 
+    fetch(`${urlTenant}/search/_api/search/query?querytext='${idListCalendar}'&selectproperties='ListItemID%2c+Title%2c+EventsRollUpStartDate%2c+titleCategory%2c+titleProfileName'&clienttype='ContentSearchRegular'`, 
     {
       method: 'get',
             headers: {
@@ -105,14 +103,15 @@ export default class WebPartFootbalEvents extends React.Component<IWebPartFootba
 
 
   private _mapArrayItems(arrayData: Array<any>): void {
-    const filterArrayEvents = arrayData.filter((item) => item.Cells[2].Value !== titleListCalendar);
+    const filterArrayEvents = arrayData.filter((item) => item.Cells[3].Value !== titleListCalendar);
     const dataMap: Array<any> = [];
     filterArrayEvents.forEach((item) => {
         dataMap.push({
-            Title: item.Cells[2].Value,
-            EventDate: item.Cells[3].Value,
-            profilename: item.Cells[5].Value,
-            categorySport: item.Cells[4].Value
+            Title: item.Cells[3].Value,
+            EventDate: item.Cells[4].Value,
+            profilename: item.Cells[6].Value,
+            categorySport: item.Cells[5].Value,
+            IdItem: item.Cells[2].Value
         });
         this.setState({
             arrayItemsList: dataMap
@@ -137,7 +136,6 @@ export default class WebPartFootbalEvents extends React.Component<IWebPartFootba
   
   public render(): React.ReactElement<IWebPartFootbalEventsProps> {
     const {arrayFootbalEventsApi, arrayItemsList, userName} = this.state;
-
     return (
       <div className={ styles.webPartFootbalEvents }>
         <div className={ styles.container }>
