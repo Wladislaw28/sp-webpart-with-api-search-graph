@@ -3,6 +3,12 @@ declare interface IWebPartFootbalEventsWebPartStrings {
   BasicGroupName: string;
   DescriptionFieldLabel: string;
 
+  TitleWebPartSpan:string;
+  TItleWebPartLeague: string;
+
+  HomeTeam: string;
+  AwayTeam: string;
+
   TextButtonIntresting: string;
   TextButtonNoIntresting: string;
 

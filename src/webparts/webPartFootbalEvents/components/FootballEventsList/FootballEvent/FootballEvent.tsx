@@ -5,8 +5,8 @@ import {urlTenant, idListCalendar} from '../../constans';
 import {setLocalStorage} from '../../setLocalStorage';
 import * as strings from 'WebPartFootbalEventsWebPartStrings';
 
-
 import styles from '../../WebPartFootbalEvents.module.scss';
+
 
 export default class FootballEvent extends React.Component<IFootballEventProps,{}> {
 
@@ -19,7 +19,6 @@ export default class FootballEvent extends React.Component<IFootballEventProps,{
         let web = new Web1(urlTenant);
         let list = web.lists.getById(idListCalendar);
         list.items.getById(+id).delete();
-        console.log('removeItemInListCalendarOnline');
     }
 
     private removeItemInListCalendar(id: string): void {
@@ -48,62 +47,39 @@ export default class FootballEvent extends React.Component<IFootballEventProps,{
 
      private checkItem(isStatusButton: boolean, Event: string, nameTitleButton: string, EventDate: string, 
         League: string, Time: string, Sport: string ): void {
-
-        console.log(isStatusButton);
-        const json: string | null  = localStorage.getItem("arrayItemsListCalendar");
-        const arrayListCalendar = JSON.parse(json);
-        arrayListCalendar.array.map((item,index) => {
-                if(item.Title === Event && item.profilename === this.props.username ) {
-                    this.removeItemInListCalendarOnline(item.IdItem);
-                    this.removeItemInListCalendar(index);
-                    if(isStatusButton === true) {
-                        this.choiceAddItem(Event, nameTitleButton, EventDate, League, Time, Sport);
-                    }
+            const json: string | null  = localStorage.getItem("arrayItemsListCalendar");
+            const arrayListCalendar = JSON.parse(json);
+            debugger;
+            const itemSelected = arrayListCalendar.array.find((item) => {
+                return item.Title === Event && item.profilename === this.props.username;
+            });
+            
+            if(isStatusButton === true) { //add item + check
+                if(itemSelected !== undefined) {
+                    const idItem: string | null = itemSelected.IdItem;
+                    const indexItem: string | null = arrayListCalendar.array.findIndex((item) => item.IdItem === idItem);
+                    
+                    this.removeItemInListCalendarOnline(idItem);
+                    this.removeItemInListCalendar(indexItem);
+                    this.choiceAddItem(Event, nameTitleButton, EventDate, League, Time, Sport);
                 } else {
-                    //не фиксил
-                    if(isStatusButton === true) {
-                        this.choiceAddItem(Event, nameTitleButton, EventDate, League, Time, Sport);
-                    } 
+                    this.choiceAddItem(Event, nameTitleButton, EventDate, League, Time, Sport);
                 }
-        });
-
-            // arrayListCalendar.array.map((item,index) => {
-            //     if(item.Title === Event && item.profilename === this.props.username ){
-            //         if(isStatusButton === true) {
-            //             arrayListCalendar.array.splice(index, 1);   
-            //             setLocalStorage(arrayListCalendar.array, 'arrayItemsListCalendar');
-
-            //             if(nameTitleButton === 'Interesting'){
-            //                 this.addEventListCalendar(EventDate, 
-            //                     Event, Sport, Time);
-            //                     return;
-            //             } else {
-            //                 this.addEventListCalendar(EventDate, 
-            //                     Event, Sport, Time);
-            //                 this.addEventOutlookCalendar(EventDate, 
-            //                     Event, League, Time); 
-            //                     return;
-            //             }
-            //         } else {
-            //             arrayListCalendar.array.splice(index, 1);   
-            //             setLocalStorage(arrayListCalendar.array, 'arrayItemsListCalendar');
-            //         }
-            //     } else {
-            //         if(isStatusButton === true){
-            //             if(nameTitleButton === 'Interesting'){
-            //                 this.addEventListCalendar(EventDate, 
-            //                     Event, Sport, Time);
-            //                     return;
-            //             } else {
-            //                 this.addEventListCalendar(EventDate, 
-            //                     Event, Sport, Time);
-            //                 this.addEventOutlookCalendar(EventDate, 
-            //                     Event, League, Time); 
-            //                     return;
-            //             }
-            //         }
-            //     }
-            // });
+            } else { //delete item
+                const idItem: string | null = itemSelected.IdItem;
+                const indexItem: string | null = arrayListCalendar.array.findIndex((item) => item.IdItem === idItem);
+                this.removeItemInListCalendarOnline(idItem);
+                this.removeItemInListCalendar(indexItem);
+            }
+        // arrayListCalendar.array.map((item,index) => {
+        //         if(item.Title === Event && item.profilename === this.props.username ) {
+        //             this.removeItemInListCalendarOnline(item.IdItem);
+        //             this.removeItemInListCalendar(index);
+        //             if(isStatusButton === true) {
+        //                 this.choiceAddItem(Event, nameTitleButton, EventDate, League, Time, Sport);
+        //             }
+        //         }
+        // });
      }
 
 
@@ -146,6 +122,7 @@ export default class FootballEvent extends React.Component<IFootballEventProps,{
                 categorySport: Sport,
                 EventDate: EventDate + 'T' + Time,
                 EndDate: EventDate + 'T' + Time
+                //ListItemID: +(Math.floor(Math.random() * (250 - 50 + 1)) + 50)
             };
             web.lists.getById(idListCalendar).items.add(newItem);
             this.addEventListCalendar(newItem);
@@ -169,8 +146,8 @@ export default class FootballEvent extends React.Component<IFootballEventProps,{
                      <p className={styles.title_Date}>{EventDateForUI}</p>
                      <h2 className={styles.title_Time}>{refactTime}</h2>
                          <div>
-                             <p className={styles.title_Team}>Home team: {HomeTeam}</p>
-                             <p className={styles.title_Team}>Away team: {AwayTeam}</p>
+                             <p className={styles.title_Team}>{strings.HomeTeam} {HomeTeam}</p>
+                             <p className={styles.title_Team}>{strings.AwayTeam} {AwayTeam}</p>
                          </div>
 
                      <a className={styles.button} onClick={() => {

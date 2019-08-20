@@ -7,6 +7,7 @@ import FootballEventsList from './FootballEventsList/FootballEventsList';
 import ItemsListCalendar from './ItemsListCalendar/ItemsListCalendar';
 import {urlApi, idListCalendar, titleListCalendar, urlTenant, minut15} from './constans';
 import {setLocalStorage} from './setLocalStorage';
+import * as strings from 'WebPartFootbalEventsWebPartStrings';
 
 import styles from './WebPartFootbalEvents.module.scss';
 
@@ -37,18 +38,9 @@ export default class WebPartFootbalEvents extends React.Component<IWebPartFootba
   public updateData(config: any) {
     this.setState( config, () => {
       if(this.state.arrayItemsList === [] || this.state.arrayItemsList.length === 0 ){
-        this.getLocalStorageListCalendar();
+        this._getItemsList();
       }
     });
-  }
-
-  private _addNewItem(item: any) : void {
-      const arrayList = this.state.arrayItemsList;
-      arrayList.push(item);
-      this.setState({
-        arrayItemsList: arrayList,
-        newItem: {}
-      },() => setLocalStorage(this.state.arrayItemsList, 'arrayItemsListCalendar'));
   }
 
   private getLocalStorageListCalendar() : void {
@@ -104,6 +96,7 @@ export default class WebPartFootbalEvents extends React.Component<IWebPartFootba
 
   private _mapArrayItems(arrayData: Array<any>): void {
     const filterArrayEvents = arrayData.filter((item) => item.Cells[3].Value !== titleListCalendar);
+    console.log(filterArrayEvents);
     const dataMap: Array<any> = [];
     filterArrayEvents.forEach((item) => {
         dataMap.push({
@@ -142,7 +135,7 @@ export default class WebPartFootbalEvents extends React.Component<IWebPartFootba
           <div className={styles.row}>
             <div className={styles.container_title_img_wp}>
               <img className={styles.logo_wp} src={require('./img/logo_webpart.png')} width="60" height="60" alt="logoWP"/>
-              <h1 className={styles.title_webpart}><span className={styles.title_webpart_span}>English</span><br/> Premier League</h1>
+              <h1 className={styles.title_webpart}><span className={styles.title_webpart_span}>{strings.TitleWebPartSpan}</span><br/> {strings.TItleWebPartLeague}</h1>
             </div>
             {arrayFootbalEventsApi.length >= 1 ? <FootballEventsList userName={userName} 
             arrayEvents={arrayFootbalEventsApi} context={this.props.context} update={this.updateData.bind(this)} /> : null}
