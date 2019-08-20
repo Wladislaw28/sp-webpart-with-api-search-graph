@@ -3,6 +3,8 @@ import { MSGraphClient } from '@microsoft/sp-http';
 import {IFootballEventProps} from './IFootballEventProps';
 import {urlTenant, idListCalendar} from '../../constans';
 import {setLocalStorage} from '../../setLocalStorage';
+import * as strings from 'WebPartFootbalEventsWebPartStrings';
+
 
 import styles from '../../WebPartFootbalEvents.module.scss';
 
@@ -17,6 +19,7 @@ export default class FootballEvent extends React.Component<IFootballEventProps,{
         let web = new Web1(urlTenant);
         let list = web.lists.getById(idListCalendar);
         list.items.getById(+id).delete();
+        console.log('removeItemInListCalendarOnline');
     }
 
     private removeItemInListCalendar(id: string): void {
@@ -28,14 +31,12 @@ export default class FootballEvent extends React.Component<IFootballEventProps,{
         this.props.update({newItem: arrayListCalendar.array});
     }
 
-    private choiceAddItem(isStatusButton: boolean, Event: string, nameTitleButton: string, EventDate: string, League: string, Time: string, Sport: string): void {
+    private choiceAddItem(Event: string, nameTitleButton: string, EventDate: string, League: string, Time: string, Sport: string): void {
         if(nameTitleButton === 'Interesting'){
-            this.addEventListCalendar(EventDate,Event, Sport, Time);
+            this.addEventListCalendarOnline(EventDate,Event, Sport, Time);
         } else {
-            this.addEventListCalendar(EventDate, 
-                                    Event, Sport, Time);
-            this.addEventOutlookCalendar(EventDate, 
-                                    Event, League, Time); 
+            this.addEventListCalendarOnline(EventDate,Event, Sport, Time);
+            this.addEventOutlookCalendar(EventDate,Event, League, Time); 
         }
     }
 
@@ -45,19 +46,26 @@ export default class FootballEvent extends React.Component<IFootballEventProps,{
         }, () => this.checkItem(this.state.isStatusButton, Event, nameTitleButton, EventDate, League, Time, Sport));
      }
 
-     private checkItem(isStatusButton: boolean, Event: string, nameTitleButton: string, EventDate: string, League: string, Time: string, Sport: string ): void {
+     private checkItem(isStatusButton: boolean, Event: string, nameTitleButton: string, EventDate: string, 
+        League: string, Time: string, Sport: string ): void {
+
+        console.log(isStatusButton);
         const json: string | null  = localStorage.getItem("arrayItemsListCalendar");
         const arrayListCalendar = JSON.parse(json);
         arrayListCalendar.array.map((item,index) => {
                 if(item.Title === Event && item.profilename === this.props.username ) {
                     this.removeItemInListCalendarOnline(item.IdItem);
                     this.removeItemInListCalendar(index);
-                    //this.choiceAddItem(isStatusButton, Event, nameTitleButton, EventDate, League, Time, Sport);
+                    if(isStatusButton === true) {
+                        this.choiceAddItem(Event, nameTitleButton, EventDate, League, Time, Sport);
+                    }
+                } else {
+                    //не фиксил
+                    if(isStatusButton === true) {
+                        this.choiceAddItem(Event, nameTitleButton, EventDate, League, Time, Sport);
+                    } 
                 }
         });
-
-
-
 
             // arrayListCalendar.array.map((item,index) => {
             //     if(item.Title === Event && item.profilename === this.props.username ){
@@ -128,7 +136,7 @@ export default class FootballEvent extends React.Component<IFootballEventProps,{
         });
       }
 
-    private async addEventListCalendar(EventDate: string, Event: string, 
+    private async addEventListCalendarOnline(EventDate: string, Event: string, 
         Sport: string, Time: string) : Promise<any> {
              const Web1 = (await import(/*webpackChunkName: '@pnp_sp' */ "@pnp/sp")).Web;
              let web = new Web1(urlTenant);
@@ -140,9 +148,18 @@ export default class FootballEvent extends React.Component<IFootballEventProps,{
                 EndDate: EventDate + 'T' + Time
             };
             web.lists.getById(idListCalendar).items.add(newItem);
-            web.lists.getById(idListCalendar).items.getById(1).delete();
-            this.props.update({newItem: newItem});
+            this.addEventListCalendar(newItem);
        }
+
+    private addEventListCalendar(newItem: object) : void {
+        const json: string | null  = localStorage.getItem("arrayItemsListCalendar");
+        const arrayListCalendar = JSON.parse(json);
+
+        arrayListCalendar.array.push(newItem);
+
+        setLocalStorage(arrayListCalendar.array, 'arrayItemsListCalendar');
+        this.props.update({newItem: arrayListCalendar.array});
+    }
 
     public render(): React.ReactElement<IFootballEventProps> {
         const {Event, EventDate, EventDateForUI, refactTime, HomeTeam, AwayTeam, Sport, Time, League} = this.props;
@@ -156,17 +173,13 @@ export default class FootballEvent extends React.Component<IFootballEventProps,{
                              <p className={styles.title_Team}>Away team: {AwayTeam}</p>
                          </div>
 
-                     <a className={styles.button} onClick={(e) => {
+                     <a className={styles.button} onClick={() => {
                          this.onCheckItem(Event,'go', EventDate, League, Time, Sport);
-                     }}>Let's go</a>
+                     }}>{this.state.isStatusButton === false ? strings.TextButtonLetsGo : strings.TextButtonNoLetsGo}</a>
 
-                     <a className={styles.button} onClick={(e) => {
+                     <a className={styles.button} onClick={() => {
                          this.onCheckItem(Event,'Interesting', EventDate, League, Time, Sport);
-                     }}>Interesting</a>
-
-                    <a className={styles.button} onClick={(e) => {
-                         this.addEventListCalendar(EventDate, Event, Sport, Time);
-                     }}>Test</a>
+                     }}>{this.state.isStatusButton === false ? strings.TextButtonIntresting : strings.TextButtonNoIntresting}</a>
             </div>
         );
     }

@@ -4,7 +4,6 @@ import { Version } from '@microsoft/sp-core-library';
 import { BaseClientSideWebPart } from '@microsoft/sp-webpart-base';
 
 import {sp} from "@pnp/sp";
-import * as strings from 'WebPartFootbalEventsWebPartStrings';
 import WebPartFootbalEvents from './components/WebPartFootbalEvents';
 import { IWebPartFootbalEventsProps } from './components/IWebPartFootbalEventsProps';
 
