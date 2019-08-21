@@ -1,0 +1,11 @@
+<View>
+    <ViewFields>
+        <FieldRef Name='idEventCaml' />
+    </ViewFields>
+    <Query>
+        <OrderBy>
+            <FieldRef Name='idEventCaml' />
+        </OrderBy>
+    </Query>
+</View>";
+    

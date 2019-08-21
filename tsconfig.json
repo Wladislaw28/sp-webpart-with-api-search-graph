@@ -29,7 +29,7 @@
     ]
   },
   "include": [
-    "src/**/*.ts", "src/webparts/webPartFootbalEvents/components/constans.ts"
+    "src/**/*.ts", "src/webparts/webPartFootbalEvents/components/constans.ts", "src/webparts/webPartFootbalEvents/components/FootballEventsList/FootballEvent/addEventOutlookCalendar.tsx"
   ],
   "exclude": [
     "node_modules",

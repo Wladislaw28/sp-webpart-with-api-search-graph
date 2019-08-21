@@ -22,8 +22,8 @@ export default class ItemsListCalendar extends React.Component<IItemsListCalenda
                 key: `column${index}`,
                 name: item,
                 fieldName: item,
-                minWidth: 120,
-                maxWidth: 140,
+                minWidth: 70,
+                maxWidth: 110,
                 isResizable: true,
             });
         });
