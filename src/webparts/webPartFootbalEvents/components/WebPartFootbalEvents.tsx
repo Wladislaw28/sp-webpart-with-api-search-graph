@@ -5,7 +5,10 @@ import { IWebPartFootbalEventsProps } from './IWebPartFootbalEventsProps';
 import { IWebPartFootbalEventsState, Events } from './IWebPartFootbalEventsState';
 import FootballEventsList from './FootballEventsList/FootballEventsList';
 import ItemsListCalendar from './ItemsListCalendar/ItemsListCalendar';
-import { urlApi, idListCalendar, titleListCalendar, urlTenant, minut15 } from './constans';
+import {
+  urlApi, idListCalendar, titleListCalendar,
+  urlTenant, minut15, arrayItemsListCalendar, arrayEventsApi
+} from './constans';
 import { setLocalStorage } from './setLocalStorage';
 import * as strings from 'WebPartFootbalEventsWebPartStrings';
 
@@ -24,8 +27,8 @@ export default class WebPartFootbalEvents extends React.Component<IWebPartFootba
   }
 
   public componentWillMount(): void {
-    if (localStorage.getItem("arrayEventsApi") === null
-      && localStorage.getItem("arrayItemsListCalendar") === null) {
+    if (localStorage.getItem(arrayEventsApi) === null
+      && localStorage.getItem(arrayItemsListCalendar) === null) {
       this._getArrayEventsWithApi();
       this._getItemsList();
     } else {
@@ -43,7 +46,7 @@ export default class WebPartFootbalEvents extends React.Component<IWebPartFootba
   }
 
   private getLocalStorageListCalendar(): void {
-    const json: string | null = localStorage.getItem("arrayItemsListCalendar");
+    const json: string | null = localStorage.getItem(arrayItemsListCalendar);
     const arrayListCalendar = JSON.parse(json);
     const timeNow = new Date();
     const minus = +timeNow - arrayListCalendar.time;
@@ -57,12 +60,12 @@ export default class WebPartFootbalEvents extends React.Component<IWebPartFootba
   }
 
   private getLocalStorageEventsApi(): void {
-    const json: string | null = localStorage.getItem("arrayEventsApi");
-    const arrayEventsApi = JSON.parse(json);
+    const json: string | null = localStorage.getItem(arrayEventsApi);
+    const arrayEventApi = JSON.parse(json);
     const nowDate = new Date().toJSON().slice(0, 10).replace(/-/g, '-');
-    if (arrayEventsApi['0'].dateEvent === nowDate) {
+    if (arrayEventApi['0'].dateEvent === nowDate) {
       this.setState({
-        arrayFootbalEventsApi: arrayEventsApi
+        arrayFootbalEventsApi: arrayEventApi
       });
     } else {
       this._getArrayEventsWithApi();
@@ -74,7 +77,7 @@ export default class WebPartFootbalEvents extends React.Component<IWebPartFootba
       .then((response) => response.json())
       .then((dataRespo) => this.setState({
         arrayFootbalEventsApi: dataRespo.events
-      }, () => setLocalStorage(this.state.arrayFootbalEventsApi, 'arrayEventsApi')));
+      }, () => setLocalStorage(this.state.arrayFootbalEventsApi, arrayEventsApi)));
   }
 
   private _getItemsList(): void {
@@ -95,7 +98,6 @@ export default class WebPartFootbalEvents extends React.Component<IWebPartFootba
 
   private _mapArrayItems(arrayData: Array<any>): void {
     const filterArrayEvents = arrayData.filter((item) => item.Cells[3].Value !== titleListCalendar);
-    console.log(filterArrayEvents);
     const dataMap: Array<any> = [];
     filterArrayEvents.forEach((item) => {
       dataMap.push({
@@ -108,7 +110,7 @@ export default class WebPartFootbalEvents extends React.Component<IWebPartFootba
       });
       this.setState({
         arrayItemsList: dataMap
-      }, () => setLocalStorage(this.state.arrayItemsList, 'arrayItemsListCalendar'));
+      }, () => setLocalStorage(this.state.arrayItemsList, arrayItemsListCalendar));
     });
   }
 

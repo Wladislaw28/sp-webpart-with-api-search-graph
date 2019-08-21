@@ -29,7 +29,8 @@ export default class FootballEventsList extends React.Component<IFootballEventsL
             const refactTime = item.strTime.split(re).splice(0, 5).join('');
             return (
               <div key={item.idEvent} className={styles.container_football_event}>
-                <FootballEvent Event={item.strEvent} EventDate={item.dateEvent} EventDateForUI={item.strDate} refactTime={refactTime}
+                <FootballEvent Event={item.strEvent} EventDate={item.dateEvent}
+                  EventDateForUI={item.strDate} refactTime={refactTime}
                   HomeTeam={item.strHomeTeam} AwayTeam={item.strAwayTeam}
                   Sport={item.strSport} Time={item.strTime} League={item.strLeague}
                   username={this.props.userName} context={this.props.context} update={this.updateData.bind(this)} />
