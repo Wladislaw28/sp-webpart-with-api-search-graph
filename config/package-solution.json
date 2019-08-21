@@ -1,7 +1,7 @@
 {
     "$schema": "https://developer.microsoft.com/json-schemas/spfx-build/package-solution.schema.json",
     "solution": {
-        "name": "task-last-wmreply-client-side-solution",
+        "name": "tasklastwmreplyclientsidesolution",
         "id": "5aab4dc1-da14-4de5-a641-c76c3194fd15",
         "version": "1.0.0.0",
         "includeClientSideAssets": true,

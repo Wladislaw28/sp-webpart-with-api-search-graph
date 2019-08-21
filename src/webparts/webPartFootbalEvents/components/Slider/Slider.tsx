@@ -37,13 +37,13 @@ import styles from '../WebPartFootbalEvents.module.scss';
                 <div className={styles.container_slider}>
                     {this.state.counter > 0 ? 
                     <a onClick={() => this._sliceEvents('-')}>
-                        <img className={styles.img_slider_next_back} src={require('../img/стрелка_лево.png')} alt="Back" />
+                        <img className={styles.img_slider_next_back} src={require('../img/strelkaLevo.png')} alt="Back" />
                     </a> 
                     : null}
                         <div className={styles.container_null_slider}></div>
                     {this.state.counter === 12 ? null : 
                     <a onClick={() => this._sliceEvents('+')}>
-                        <img className={styles.img_slider_next_back} src={require('../img/стрелка_право.png')} alt="Next" />
+                        <img className={styles.img_slider_next_back} src={require('../img/strelkaPravo.png')} alt="Next" />
                     </a>}
                 </div>
             </div>
